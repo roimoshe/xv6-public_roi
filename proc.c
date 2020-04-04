@@ -316,28 +316,24 @@ wait(int *status)
   }
 }
 
-//PAGEBREAK: 42
-// Per-CPU process scheduler.
-// Each CPU calls scheduler() after setting itself up.
-// Scheduler never returns.  It loops, doing:
-//  - choose a process to run
-//  - swtch to start running that process
-//  - eventually that process transfers control
-//      via swtch back to the scheduler.
+// policy round robin
 void
-scheduler(void)
+scheduler_0(struct proc **p_pointer,struct cpu *c)
 {
-  struct proc *p;
-  struct cpu *c = mycpu();
-  c->proc = 0;
-  
-  for(;;){
-    // Enable interrupts on this processor.
-    sti();
+    struct proc *p = *p_pointer;
 
     // Loop over process table looking for process to run.
     acquire(&ptable.lock);
-    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if(p >= &ptable.proc[NPROC]){
+      p = ptable.proc;
+    }
+
+    if(p == ptable.proc){
+      // Enable interrupts on this processor.
+      sti();
+    }
+
+    for(;p < &ptable.proc[NPROC]; p++){
       if(p->state != RUNNABLE)
         continue;
 
@@ -354,11 +350,67 @@ scheduler(void)
       // Process is done running for now.
       // It should have changed its p->state before coming back.
       c->proc = 0;
+      p++;
+      break;
     }
     release(&ptable.lock);
-
-  }
+  
 }
+
+// policy Priority Scheduling
+void
+scheduler_1(struct proc **p,struct cpu *c)
+{
+    // Enable interrupts on this processor.
+    sti();
+
+    // Loop over process table looking for process to run.
+    acquire(&ptable.lock);
+    
+    //policy...
+
+
+    release(&ptable.lock);
+  
+}
+
+
+//PAGEBREAK: 42
+// Per-CPU process scheduler.
+// Each CPU calls scheduler() after setting itself up.
+// Scheduler never returns.  It loops, doing:
+//  - choose a process to run
+//  - swtch to start running that process
+//  - eventually that process transfers control
+//      via swtch back to the scheduler.
+void
+scheduler(void)
+{
+  struct proc *p = ptable.proc;
+  struct cpu *c = mycpu();
+  c->proc = 0;
+  for(;;){
+    switch (sched_type)
+    {
+      case 0:
+        scheduler_0(&p, c);
+        break;
+      case 1:
+        scheduler_1(&p, c);
+        break;  
+      case 2:
+        /* code */
+        break;
+      case 3:
+        /* code */
+        break;
+      default:
+        break;
+    }
+  }
+
+}
+
 
 // Enter scheduler.  Must hold only ptable.lock
 // and have changed proc->state. Saves and restores
