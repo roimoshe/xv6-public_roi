@@ -247,9 +247,9 @@ exit(int status)
   end_op();
   curproc->cwd = 0;
 
-  acquire(&ptable.lock);
-
   curproc->status = status;
+
+  acquire(&ptable.lock);
 
   // Parent might be sleeping in wait().
   wakeup1(curproc->parent);
@@ -272,7 +272,7 @@ exit(int status)
 // Wait for a child process to exit and return its pid.
 // Return -1 if this process has no children.
 int
-wait(void)
+wait(int *status)
 {
   struct proc *p;
   int havekids, pid;
@@ -289,6 +289,9 @@ wait(void)
       if(p->state == ZOMBIE){
         // Found one.
         pid = p->pid;
+        if (status != null){
+          *status = p->status;
+        }
         kfree(p->kstack);
         p->kstack = 0;
         freevm(p->pgdir);
