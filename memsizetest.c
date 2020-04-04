@@ -10,5 +10,5 @@ main(int argc, char *argv[])
     printf(1, "The process is using: %dB\n", memsize());
     free(ptr);
     printf(1, "The process is using: %dB\n", memsize());
-  exit();
+  exit(0);
 }
