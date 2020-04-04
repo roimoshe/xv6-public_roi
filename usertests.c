@@ -1748,7 +1748,6 @@ rand()
 int
 main(int argc, char *argv[])
 {
-  int status;
   printf(1, "usertests starting\n");
 
   if(open("usertests.ran", 0) >= 0){
