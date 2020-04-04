@@ -19,11 +19,11 @@ int link(const char*, const char*);
 int mkdir(const char*);
 int chdir(const char*);
 int dup(int);
-int memsize(void);
 char* sbrk(int);
 int sleep(int);
 int uptime(void);
 int getpid(void);
+int memsize(void);
 
 // ulib.c
 int stat(const char*, struct stat*);
