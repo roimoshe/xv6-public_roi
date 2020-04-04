@@ -249,7 +249,7 @@ exit(int status)
 
   acquire(&ptable.lock);
 
-  curproc.status = status;
+  curproc->status = status;
 
   // Parent might be sleeping in wait().
   wakeup1(curproc->parent);
