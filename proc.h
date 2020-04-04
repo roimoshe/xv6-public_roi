@@ -1,3 +1,20 @@
+
+#include "limits.h"
+
+#define SCHED_TYPE_ROUND_RONBIN 0
+#define SCHED_TYPE_NORMAL_PRIORITY 1
+#define SCHED_TYPE_CFS_PRIORITY 2
+
+#define HIGH_DECAY_FACTOR 0.75
+#define NORMAL_DECAY_FACTOR 1
+#define LOW_DECAY_FACTOR 1.25
+
+#define INVALID_CFS_PRIORITY 0
+#define HIGH_CFS_PRIORITY 1
+#define NORMAL_CFS_PRIORITY 2
+#define LOW_CFS_PRIORITY 3
+
+
 // Per-CPU state
 struct cpu {
   uchar apicid;                // Local APIC ID
@@ -50,6 +67,12 @@ struct proc {
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
   int status;
+  int ps_priority;
+  long long accumulator;
+  double decay_factor;
+  int rtime;
+  int stime;
+  int retime;
 };
 
 // Process memory is laid out contiguously, low addresses first:
@@ -57,3 +80,12 @@ struct proc {
 //   original data and bss
 //   fixed-size stack
 //   expandable heap
+
+struct perf {
+    int ps_priority;
+    int stime;
+    int retime;
+    int rtime;
+};
+
+void update_cfs_statistics();

@@ -29,7 +29,7 @@ sys_wait(void)
 {
   int *status;
 
-  if(argint(0, (int *)&status) < 0)
+  if(argptr(0, (char **)&status, sizeof(int)) < 0)
     return -1;
   return wait(status);
 }
@@ -102,4 +102,40 @@ int
 sys_memsize(void)
 {
   return myproc()->sz;
+}
+
+int
+sys_set_ps_priority(void)
+{
+  int new_priority;
+    if(argint(0, &new_priority) < 0)
+      return -1;
+  return set_ps_priority(new_priority);
+}
+
+int
+sys_set_cfs_priority(void)
+{
+  int new_cfs_priority;
+    if(argint(0, &new_cfs_priority) < 0)
+      return -1;
+  return set_cfs_priority(new_cfs_priority);
+}
+
+int
+sys_policy(void)
+{
+  int policy;
+    if(argint(0, &policy) < 0)
+      return -1;
+  return set_policy(policy);
+}
+
+int
+sys_proc_info(void)
+{
+  struct perf *performance;
+    if(argptr(0, (char **)&performance, sizeof(struct perf)) < 0)
+      return -1;
+  return proc_info(performance);
 }

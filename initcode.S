@@ -16,10 +16,8 @@ start:
 
 # for(;;) exit();
 exit:
-  pushl $0
   movl $SYS_exit, %eax
   int $T_SYSCALL
-  addl $4, %esp
   jmp exit
 
 # char init[] = "/init\0";

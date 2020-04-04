@@ -1,6 +1,11 @@
 struct stat;
 struct rtcdate;
-
+struct perf {
+    int ps_priority;
+    int stime;
+    int retime;
+    int rtime;
+};
 // system calls
 int fork(void);
 int exit(int status) __attribute__((noreturn));
@@ -24,6 +29,13 @@ int sleep(int);
 int uptime(void);
 int getpid(void);
 int memsize(void);
+int set_ps_priority(int new_priority);
+int set_cfs_priority(int new_cfs_priority);
+int policy(int new_policy);
+int proc_info(struct perf *performance);
+#define SYS_set_ps_priority  23
+#define SYS_set_cfs_priority  24
+#define SYS_policy  25
 
 // ulib.c
 int stat(const char*, struct stat*);

@@ -54,6 +54,7 @@ mpmain(void)
   cprintf("cpu%d: starting %d\n", cpuid(), cpuid());
   idtinit();       // load idt register
   xchg(&(mycpu()->started), 1); // tell startothers() we're up
+  sched_type = SCHED_TYPE_ROUND_RONBIN;
   scheduler();     // start running processes
 }
 

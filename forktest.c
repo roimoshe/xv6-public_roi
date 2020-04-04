@@ -30,19 +30,19 @@ forktest(void)
 
   if(n == N){
     printf(1, "fork claimed to work N times!\n", N);
-    exit(0);
+    exit(1);
   }
 
   for(; n > 0; n--){
     if(wait(&status) < 0){
       printf(1, "wait stopped early\n");
-      exit(0);
+      exit(1);
     }
   }
 
   if(wait(&status) != -1){
     printf(1, "wait got too many\n");
-    exit(0);
+    exit(1);
   }
 
   printf(1, "fork test OK\n");
